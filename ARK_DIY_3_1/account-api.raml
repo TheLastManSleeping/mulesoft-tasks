@@ -1,0 +1,46 @@
+#%RAML 1.0
+title: Account API
+types: 
+  Account: !include AccountDataType.raml
+
+/accounts:
+  get:
+    queryParameters:
+      requestedBy:
+        required: true
+        enum:
+          - system
+          - user
+      accountType:
+        required: false
+        enum:
+          - personal
+          - business
+    responses:
+      200:
+        body:
+          application/json:
+            type: Account[]
+            examples:
+              output: !include examples/AccountGet.raml
+  /{name}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: Account
+              examples:
+                output: !include examples/AccountGetByName.raml
+  post:
+    body:
+      application/json:
+        type: Account
+        examples:
+          input: !include examples/AccountPost.raml
+    responses:
+      201:
+        body: 
+          application/json:
+            example:
+              message: You created an account!(yes, but actually no)
