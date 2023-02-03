@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="accounts_meta" format="json">
+      <types:shape format="weave" example="examples/1.json"><![CDATA[%dw 2.0
+
+type accounts_meta = Array<{|  ID: Number {"typeId": "int"},   name: String,   "type": String,   address: String,   airMiles: Number {"typeId": "int"},   creationDate: String|}> {"example": "[{\\\"ID\\\":1,\\\"name\\\":\\\"A\\\",\\\"type\\\":\\\"personal\\\",\\\"address\\\":\\\"Minsk, kd 12\\\",\\\"airMiles\\\":999,\\\"creationDate\\\":\\\"2019-08-21T04:34:41.098Z\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#aa20c0fb-42d3-4ef9-995c-a2890c617305">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="accounts_meta"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#3761985d-f228-4fc1-95e4-1c00930b3b9c">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="accounts_meta"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
