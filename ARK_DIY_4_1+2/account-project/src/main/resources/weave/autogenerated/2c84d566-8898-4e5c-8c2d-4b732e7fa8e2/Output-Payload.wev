@@ -1,0 +1,12 @@
+%dw 2.0
+
+type auto_2c84d566_8898_4e5c_8c2d_4b732e7fa8e2_Output_Payload = {
+  address: String, 
+  airMiles: Number, 
+  name: String, 
+  ID?: Number, 
+  "type"?: "business" | "personal", 
+  creationDate: String, 
+  _?: Any
+}
+

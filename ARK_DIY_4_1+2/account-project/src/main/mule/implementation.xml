@@ -28,4 +28,25 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="getAccountsById" doc:id="2c84d566-8898-4e5c-8c2d-4b732e7fa8e2" >
+		<db:select doc:name="select_accounts" doc:id="bbcd4532-a99e-4654-a50f-ac59e2566e10" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM flights_customers WHERE accountID = :ID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="9de34911-c2e7-49f5-a2d2-4ecc13cc2c35" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.accountID as Number default 0,
+	name: payload01.name default "",
+	"type": payload01.accountType default "",
+	address: ((((payload01.country default "") ++ (payload01.postal default "")) ++ (payload01.state default "")) ++ (payload01.city default "")) ++ (payload01.street default ""),
+	airMiles: payload01.miles default 0,
+	creationDate: payload01.creationDate as String default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>
