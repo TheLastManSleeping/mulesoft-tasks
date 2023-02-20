@@ -1,0 +1,15 @@
+# HTTP Listener
+http:
+  port: "8081"
+  
+# Accounts
+accounts:
+  host: "account-project-api-ak.us-e2.cloudhub.io"
+  port: "80"
+  basepath: "/"
+  protocol: "HTTP"
+  client_id: "f1bd587b461b420f96b39a37ada6b7b4"
+  client_secret: "c2c4D1A4C1a64a119cD0a5b76556b679"
+
+# CSR Queues
+vm.queue: "input_queue"
