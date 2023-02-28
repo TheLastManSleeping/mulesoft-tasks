@@ -1,34 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="aade0bb0-b6df-4cee-8dbd-339635dd438a" >
-		<http:listener-connection host="0.0.0.0" port="8081" />
-	</http:listener-config>
-	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="41152681-0595-452d-a31c-6bdfa31026ac" >
-		<http:request-connection host="account-project-api-ak.us-e2.cloudhub.io" port="80"/>
-	</http:request-config>
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
 	<flow name="get-name" doc:id="bc56c768-5897-42f2-944e-6e4782af8b47" >
-		<http:listener doc:name="GET /name" doc:id="aeee9f3a-60ea-4b0c-b2e0-db56353ffdd5" config-ref="HTTP_Listener_config" path="/name" allowedMethods="GET" >
-			<http:response >
-				<http:headers ><![CDATA[#[{
-	number_of_accounts: sizeOf(payload as Array),
-	account_name: vars.accountName,
-	csr_user_id: vars.userId
-}]]]></http:headers>
-			</http:response>
-		</http:listener>
 		<flow-ref doc:name="start" doc:id="fcb85e2c-cea8-4852-bd85-f427842a1d9f" name="log-start" />
 		<set-variable value="#[attributes.queryParams.name]" doc:name="accountName" doc:id="6803e152-8a57-4437-858f-35b43fceaaa5" variableName="accountName" />
 		<http:request method="GET" doc:name="GET accounts by name" doc:id="8191da1b-e4a1-470f-af7e-3b671f4a598b" config-ref="HTTP_Request_configuration" path="/accounts" >
 			<http:headers ><![CDATA[#[{
 	user_id : vars.userId,
-	client_id: Mule::p("accounts.client_id"),
-	client_secret: Mule::p("accounts.client_secret")
+	client_id: p("accounts.client_id"),
+	client_secret: p("accounts.client_secret")
 }]]]></http:headers>
 			<http:query-params ><![CDATA[#[{
 	account_name: vars.accountName
@@ -37,22 +23,13 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<flow-ref doc:name="end" doc:id="134dc8d1-f1b8-4223-9549-afc85478d76a" name="log-end" />
 	</flow>
 	<flow name="get-type" doc:id="a42886e0-6b17-4669-b57f-02b5daff832b" >
-		<http:listener doc:name="GET /type" doc:id="5426332e-8d62-48ec-975a-0ede0085a4a2" config-ref="HTTP_Listener_config" path="/accounts-by-type" allowedMethods="GET" >
-			<http:response >
-				<http:headers ><![CDATA[#[{
-	number_of_accounts: sizeOf(payload as Array),
-	account_type: vars.accountType,
-	csr_user_id: vars.userId
-}]]]></http:headers>
-			</http:response>
-		</http:listener>
 		<flow-ref doc:name="start" doc:id="3470fa4b-b4d8-4582-858c-81826350b126" name="log-start" />
-		<set-variable value='#[attributes.queryParams.type default "business"]' doc:name="accountType" doc:id="81fd1fea-8efc-42d7-9c0b-87f6883ef05f" variableName="accountType" />
+		<set-variable value='#[attributes.queryParams.ctype default "business"]' doc:name="accountType" doc:id="81fd1fea-8efc-42d7-9c0b-87f6883ef05f" variableName="accountType" />
 		<http:request method="GET" doc:name="GET accounts by type" doc:id="9477902a-ec00-4f51-8c31-3723ee4f8e81" config-ref="HTTP_Request_configuration" path="/accounts" >
 			<http:headers ><![CDATA[#[{
 	user_id : vars.userId,
-	client_id: Mule::p("accounts.client_id"),
-	client_secret: Mule::p("accounts.client_secret")
+	client_id: p("accounts.client_id"),
+	client_secret: p("accounts.client_secret")
 }]]]></http:headers>
 			<http:query-params ><![CDATA[#[{
 	account_type: vars.accountType
@@ -98,8 +75,8 @@ output application/json
 			<http:body ><![CDATA[#[payload.accounts]]]></http:body>
 			<http:headers ><![CDATA[#[{
 	user_id: payload.user_id,
-	client_id: Mule::p("accounts.client_id"),
-	client_secret: Mule::p("accounts.client_secret")
+	client_id: p("accounts.client_id"),
+	client_secret: p("accounts.client_secret")
 }]]]></http:headers>
 		</http:request>
 		<flow-ref doc:name="end" doc:id="c36d14cf-eaa0-4122-b097-391c5d8fb029" name="log-end" />
@@ -109,6 +86,26 @@ output application/json
 	</flow>
 	<sub-flow name="log-start" doc:id="413a3080-84a8-44be-a881-939ab999becf" >
 		<logger level="INFO" doc:name="First" doc:id="7b88e6bf-7bc6-4d8d-9331-4a8a5bca7664" />
-		<set-variable value="#[message.attributes.headers.csr_user_id]" doc:name="userId" doc:id="bfab1daa-ce25-4cd5-ab62-29e0373851e4" variableName="userId" />
+		<set-variable value="#[attributes.headers.csr_user_id]" doc:name="userId" doc:id="bfab1daa-ce25-4cd5-ab62-29e0373851e4" variableName="userId" />
 	</sub-flow>
+	<flow name="get-name1" doc:id="734eb724-0278-445f-b7ad-9fd519f5abda" >
+		<http:listener doc:name="GET" doc:id="0852ceae-cc97-4814-a9b1-ff1e8bd40798" config-ref="HTTP_Listener_config" path="/users" allowedMethods="GET" >
+			<http:response >
+				<http:headers ><![CDATA[#[{
+	number_of_accounts: sizeOf(payload),
+	account_name: vars.accountName,
+	account_type: vars.accountType,
+	csr_user_id: vars.userId
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<choice doc:name="Choice" doc:id="9cdde8d4-642b-4b4d-9680-f90613a9eb14" tracking:enable-default-events="true">
+			<when expression="#[attributes.queryParams.name != null]">
+				<flow-ref doc:name="get-by-name" doc:id="0ec6d1c6-9dbc-4284-87e2-0734fbf134e6" name="get-name"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="get-by-type" doc:id="b1806158-49be-408f-b4df-24f4a0461a40" name="get-type"/>
+			</otherwise>
+		</choice>
+	</flow>
 </mule>
